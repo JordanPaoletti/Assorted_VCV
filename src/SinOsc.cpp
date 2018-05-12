@@ -1,7 +1,7 @@
-#include "Template.hpp"
+#include "AssortedModules.hpp"
 
 
-struct MyModule : Module {
+struct SinOsc : Module {
 	enum ParamIds {
 		PITCH_PARAM,
 		NUM_PARAMS
@@ -22,7 +22,7 @@ struct MyModule : Module {
 	float phase = 0.0;
 	float blinkPhase = 0.0;
 
-	MyModule() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
+	SinOsc() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
 	void step() override;
 
 	// For more advanced Module features, read Rack's engine.hpp header file
@@ -32,7 +32,7 @@ struct MyModule : Module {
 };
 
 
-void MyModule::step() {
+void SinOsc::step() {
 	// Implement a simple sine oscillator
 	float deltaTime = engineGetSampleTime();
 
@@ -60,8 +60,8 @@ void MyModule::step() {
 }
 
 
-struct MyModuleWidget : ModuleWidget {
-	MyModuleWidget(MyModule *module) : ModuleWidget(module) {
+struct SinOscWidget : ModuleWidget {
+	SinOscWidget(SinOsc *module) : ModuleWidget(module) {
 		setPanel(SVG::load(assetPlugin(plugin, "res/MyModule.svg")));
 
 		addChild(Widget::create<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));
@@ -69,13 +69,13 @@ struct MyModuleWidget : ModuleWidget {
 		addChild(Widget::create<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(Widget::create<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(28, 87), module, MyModule::PITCH_PARAM, -3.0, 3.0, 0.0));
+		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(28, 87), module, SinOsc::PITCH_PARAM, -3.0, 3.0, 0.0));
 
-		addInput(Port::create<PJ301MPort>(Vec(33, 186), Port::INPUT, module, MyModule::PITCH_INPUT));
+		addInput(Port::create<PJ301MPort>(Vec(33, 186), Port::INPUT, module, SinOsc::PITCH_INPUT));
 
-		addOutput(Port::create<PJ301MPort>(Vec(33, 275), Port::OUTPUT, module, MyModule::SINE_OUTPUT));
+		addOutput(Port::create<PJ301MPort>(Vec(33, 275), Port::OUTPUT, module, SinOsc::SINE_OUTPUT));
 
-		addChild(ModuleLightWidget::create<MediumLight<RedLight>>(Vec(41, 59), module, MyModule::BLINK_LIGHT));
+		addChild(ModuleLightWidget::create<MediumLight<RedLight>>(Vec(41, 59), module, SinOsc::BLINK_LIGHT));
 	}
 };
 
@@ -84,4 +84,4 @@ struct MyModuleWidget : ModuleWidget {
 // author name for categorization per plugin, module slug (should never
 // change), human-readable module name, and any number of tags
 // (found in `include/tags.hpp`) separated by commas.
-Model *modelMyModule = Model::create<MyModule, MyModuleWidget>("Template", "MyModule", "My Module", OSCILLATOR_TAG);
+Model *modelSinOsc = Model::create<SinOsc, SinOscWidget>("JPaoletti", "JPaoletti-SinOsc", "Sin Osc", OSCILLATOR_TAG);
